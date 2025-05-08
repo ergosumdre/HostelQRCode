@@ -22,7 +22,7 @@ This Python script provides a simple web interface (using Gradio) to automate th
 
 ## Features
 
-### Data Sync and Cleaning Script (`data_sync_and_clean.py`)
+### Data Sync and Cleaning Script (`pull_reports.py`)
 
 *   **Automated Report Retrieval:** Uses Selenium to log into the Mews system and navigate to the "Guests in house" report.
 *   **Date Filtering:** Configures the report dates for the current day's guests.
@@ -31,7 +31,7 @@ This Python script provides a simple web interface (using Gradio) to automate th
 *   **Date Extraction:** Parses check-in and check-out dates from a specific column (currently assumes they are embedded within the 'Companions' column string).
 *   **CSV Output:** Saves the cleaned and formatted data to a CSV file (`cleaned_guest_list.csv`), which serves as the input for the QR Check-in App.
 
-### QR Check-in Web Application (`qr_checkin_app.py`)
+### QR Check-in Web Application (`app.py`)
 
 *   **Gradio Web Interface:** Provides an intuitive, browser-based interface for staff to trigger the process.
 *   **Guest Data Integration:** Reads the `cleaned_guest_list.csv` file using pandas.
@@ -47,11 +47,11 @@ This Python script provides a simple web interface (using Gradio) to automate th
 
 ## Prerequisites
 
-*   Python 3.x installed.
+*   Python 3.10 installed.
 *   The Python libraries listed in the Dependencies section.
 *   A Mews account with access to the "Guests in house" report.
-*   A Chrome browser installed on the machine running the `data_sync_and_clean.py` script.
-*   A web server configured to serve static files (e.g., Nginx, Apache). The `qr_checkin_app.py` script is configured to copy files to a local web root (like `/var/www/html`) and upload via SFTP to a remote server.
+*   A Chrome browser installed on the machine running the `pull_reports.py` script.
+*   A web server configured to serve static files (e.g., Nginx, Apache). The `pull_reports.py` script is configured to copy files to a local web root (like `/var/www/html`) and upload via SFTP to a remote server.
 *   SFTP access credentials (host, port, username, password, target directory) for the server hosting the public domain used in the QR code links (e.g., `napyorkguest.com`).
 *   Appropriate directory structure on the server running the scripts and the target web server.
 
@@ -78,7 +78,7 @@ pip install gradio pandas qrcode pillow paramiko pytz selenium webdriver-manager
 
 The personalized guest check-in page is generated using a fixed HTML template embedded as a large multi-line string within the `generate_html` function in the Python script. This template contains placeholders (`{}`) that are dynamically filled with the specific guest's information.
 
-To modify the design or content of the guest page, you must directly **edit the large multi-line string inside the `generate_html` function** in the `napcheckin.py` file. Be aware that this template includes a significant amount of inline CSS and JavaScript, likely from a web design tool, and requires careful editing to avoid breaking the page layout or functionality.
+To modify the design or content of the guest page, you must directly **edit the large multi-line string inside the `generate_html` function** in the `app.py` file. Be aware that this template includes a significant amount of inline CSS and JavaScript, likely from a web design tool, and requires careful editing to avoid breaking the page layout or functionality.
 
 ## File Structure Expectation (Based on Linux Paths in Code)
 
