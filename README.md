@@ -61,7 +61,7 @@ Install the necessary libraries using pip:
 
 ```bash
 pip install gradio pandas qrcode pillow paramiko pytz selenium webdriver-manager openpyxl requests beautifulsoup4
-    ```
+```
     The Gradio application will start, and its local URL (e.g., `http://127.0.0.1:7860`) and possibly an external URL will be displayed in the console output.
 2.  **Access the Web UI:** Open a web browser and go to the URL provided by Gradio.
 3.  **Authenticate:** Enter the configured username and password when prompted by the browser's basic authentication dialog.
