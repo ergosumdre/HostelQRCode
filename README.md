@@ -22,15 +22,26 @@ This Python script provides a simple web interface (using Gradio) to automate th
 
 ## Features
 
+### Data Sync and Cleaning Script (`data_sync_and_clean.py`)
+
+*   **Automated Report Retrieval:** Uses Selenium to log into the Mews system and navigate to the "Guests in house" report.
+*   **Date Filtering:** Configures the report dates for the current day's guests.
+*   **Report Export:** Triggers the export/download of the report from Mews.
+*   **Data Cleaning & Structuring:** Reads the downloaded Excel report (Sheet 2) using pandas, restructuring rows to ensure each guest has all relevant details on a single row.
+*   **Date Extraction:** Parses check-in and check-out dates from a specific column (currently assumes they are embedded within the 'Companions' column string).
+*   **CSV Output:** Saves the cleaned and formatted data to a CSV file (`cleaned_guest_list.csv`), which serves as the input for the QR Check-in App.
+
+### QR Check-in Web Application (`qr_checkin_app.py`)
+
 *   **Gradio Web Interface:** Provides an intuitive, browser-based interface for staff to trigger the process.
-*   **Guest Data Integration:** Reads guest lists and door codes from CSV files using the pandas library.
+*   **Guest Data Integration:** Reads the `cleaned_guest_list.csv` file using pandas.
 *   **Current Guest Identification:** Logic to find the currently checked-in guest for a specific bed number, handling potential overlaps based on dates.
 *   **Personalized HTML Page Generation:** Dynamically creates a web page for each guest containing their name, room number, room access code, bed/locker number, and checkout date. (The HTML template is embedded within the script).
 *   **Secure File Transfer:** Uploads the generated HTML page to a remote web server via SFTP (using paramiko).
 *   **Local File Copy:** Also copies the generated HTML to a local web server directory (e.g., `/var/www/html`).
-*   **QR Code Generation:** Creates a scannable QR code image linking to the guest's specific online check-in page.
-*   **Balance Alert:** Notifies the user (via a UI message and a system sound) if the guest has an outstanding balance above $1.
-*   **Activity Logging:** Records each successful QR code generation event in a log file with timestamp, URL, bed number, and guest name.
+*   **QR Code Generation:** Creates a scannable QR code image linking to the guest's specific online check-in page. Includes error handling to generate a default QR even if guest lookup or balance check fails.
+*   **Balance Alert:** Notifies the user (via a UI message and a system sound) and customizes the QR link if the guest has an outstanding balance above $1.
+*   **Activity Logging:** Records each successful QR code generation event in a log file with timestamp, URL, bed number, and guest name. Logs errors as well.
 *   **Integrated Wi-Fi Info:** Includes a static QR code for the Nap York Wi-Fi within the interface.
 *   **Basic Authentication:** Protects the Gradio web interface with a simple username and password login.
 
@@ -38,46 +49,18 @@ This Python script provides a simple web interface (using Gradio) to automate th
 
 *   Python 3.x installed.
 *   The Python libraries listed in the Dependencies section.
-*   A CSV file containing guest details (`cleaned_guest_list.csv`) with columns like `bed_number`, `Customer`, `check_in_date`, `check_out_date`, and `Balance including preauthorizations`.
-*   A CSV file containing room access codes (`doorCodes.csv`) with columns like `Room` and `Passcode`.
-*   Access to a web server where the generated HTML files will be hosted and accessible via a public URL (like `napyorkguest.com`).
-*   SFTP access credentials (host, port, username, password, target directory) for the server hosting the public domain.
-*   Appropriate directory structure on the server running the script and the target web server.
+*   A Mews account with access to the "Guests in house" report.
+*   A Chrome browser installed on the machine running the `data_sync_and_clean.py` script.
+*   A web server configured to serve static files (e.g., Nginx, Apache). The `qr_checkin_app.py` script is configured to copy files to a local web root (like `/var/www/html`) and upload via SFTP to a remote server.
+*   SFTP access credentials (host, port, username, password, target directory) for the server hosting the public domain used in the QR code links (e.g., `napyorkguest.com`).
+*   Appropriate directory structure on the server running the scripts and the target web server.
 
 ## Dependencies
 
-Install the necessary Python libraries using pip:
+Install the necessary libraries using pip:
 
 ```bash
-pip install gradio pandas qrcode pillow paramiko pytz
-
-```
-
-## Setup
-
-1.  **Save the Code:** Save the provided Python code as a `.py` file (e.g., `napcheckin.py`).
-2.  **Prepare Data Files:** Ensure your `cleaned_guest_list.csv` and `doorCodes.csv` files are correctly formatted and placed in the directories specified in the script.
-3.  **Configure File Paths:**
-    *   The script contains specific Linux paths. **You must edit the Python script (`napcheckin.py`)** to update the absolute paths to match your server environment for:
-        *   `guest_list_path`
-        *   `door_codes_path`
-        *   `qrCode_path` (Output path for the temporary QR code image file)
-        *   `checkin_html_path` (Output path for the temporary HTML file before copy/upload)
-        *   `activity_logs_path` (Path for the activity log file)
-        *   The local directory path used as the *destination* for `shutil.copy` (e.g., `/var/www/html/` in the code's copy operation).
-    *   **Important:** Ensure the user account running the script has read and write permissions for these directories and files.
-4.  **Configure SFTP Credentials:** **Edit the `generateQRCode` function in the Python script** to replace the placeholder SFTP details with your actual connection information (`sftp_host`, `sftp_port`, `sftp_username`, `sftp_password`, `sftp_directory`).
-    *   **Security Warning:** Hardcoding credentials directly in the script is **not recommended for production environments**. Consider using environment variables or a separate configuration file for better security.
-5.  **Configure Web Server:** Ensure your local web server (if using the local copy) is configured to serve files from the directory specified in the `shutil.copy` destination. Crucially, verify that the domain used in the QR code URL (e.g., `napyorkguest.com`) correctly points to the directory on the remote server specified in your SFTP configuration.
-6.  **Update QR Link URL:** If you are not using `http://napyorkguest.com/`, **edit the `qr.add_data()` line in the `generateQRCode` function** to use your correct public domain or IP address. The UTM parameters can also be adjusted here.
-7.  **Update Basic Auth:** **Edit the `auth` parameter in the `demo.launch()` line** near the end of the script to change the default username and password (`"Napyork", "napnow"`) used to access the Gradio interface.
-
-## Usage
-
-1.  **Run the Script:** Open your terminal or command prompt, navigate to the directory where you saved the script, and execute it:
-
-    ```bash
-    python napcheckin.py
+pip install gradio pandas qrcode pillow paramiko pytz selenium webdriver-manager openpyxl requests beautifulsoup4
     ```
     The Gradio application will start, and its local URL (e.g., `http://127.0.0.1:7860`) and possibly an external URL will be displayed in the console output.
 2.  **Access the Web UI:** Open a web browser and go to the URL provided by Gradio.
