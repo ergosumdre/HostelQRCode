@@ -12,7 +12,7 @@ This Python script provides a simple web interface (using Gradio) to automate th
 </td>
 <td style="text-align:center;">
 <!-- Client View Image -->
-<img src="[https://dredyson.com/wp-content/uploads/2025/05/Screenshot-2025-05-08-at-2.17.36%E2%80%AFPM.png]" alt="Client View (HTML Page)" width="400">
+<img src="https://dredyson.com/wp-content/uploads/2025/05/Screenshot-2025-05-08-at-2.17.36%E2%80%AFPM.png" alt="Client View (HTML Page)" width="400">
 <br>
 *Client View (Personalized HTML Page)*
 </td>
