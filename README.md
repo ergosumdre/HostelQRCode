@@ -33,6 +33,8 @@ Install the necessary Python libraries using pip:
 ```bash
 pip install gradio pandas qrcode pillow paramiko pytz
 
+```
+
 ## Setup
 
 1.  **Save the Code:** Save the provided Python code as a `.py` file (e.g., `napcheckin.py`).
