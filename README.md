@@ -6,7 +6,7 @@ This Python script provides a simple web interface (using Gradio) to automate th
 <tr>
 <td style="text-align:center;">
 <!-- Operator View Image -->
-<img src="https://dredyson.com/wp-content/uploads/2025/05/Screenshot-2025-05-08-at-3.16.07 PM.png" alt="Operator View (Gradio Interface)" width="400">
+<img src="https://dredyson.com/wp-content/uploads/2025/05/Screenshot-2025-05-08-at-3.24.44 PM.png" alt="Operator View (Gradio Interface)" width="400">
 <br>
 *Operator View (Gradio Interface)*
 </td>
