@@ -62,45 +62,22 @@ Install the necessary libraries using pip:
 ```bash
 pip install gradio pandas qrcode pillow paramiko pytz selenium webdriver-manager openpyxl requests beautifulsoup4
 ```
-    The Gradio application will start, and its local URL (e.g., `http://127.0.0.1:7860`) and possibly an external URL will be displayed in the console output.
-2.  **Access the Web UI:** Open a web browser and go to the URL provided by Gradio.
-3.  **Authenticate:** Enter the configured username and password when prompted by the browser's basic authentication dialog.
-4.  **Enter Bed Number:** In the web interface, type the guest's bed number (e.g., `201-1`) into the "Enter Room & Bed Number" textbox.
-5.  **Submit:** Click the "submit" button.
-6.  **View Results:**
+
+
+## How to Use 
+The Gradio application will start, and its local URL (e.g., `http://127.0.0.1:7860`) and URL will be displayed in the console output.
+1.  **Access the Web UI:** Open a web browser and go to the URL provided by Gradio.
+2.  **Authenticate:** Enter the configured username and password when prompted by the browser's basic authentication dialog.
+3.  **Enter Bed Number:** In the web interface, type the guest's bed number (e.g., `201-1`) into the "Enter Room & Bed Number" textbox.
+4.  **Submit:** Click the "submit" button.
+5.  **View Results:**
     *   The script will process the request, look up the guest, check their balance, generate the HTML, copy/upload it, and create the QR code.
     *   If the guest has a balance over $1, an audible bell will sound from the server terminal, and an error message "Please take care of balance" will appear in the web interface outputs.
     *   If successful and the balance is acceptable, the generated QR code image, the public URL linking to the guest's check-in page, and the guest's name will be displayed in the output section of the web page.
-7.  **Share Information:** Staff can show the displayed QR code for the guest to scan with their smartphone, or provide them with the generated QR link directly.
-8.  **Review Logs:** The `activity_logs.txt` file will be updated with a record of the QR code generation event, including the timestamp, URL, bed number, and guest name.
+6.  **Share Information:** Staff can show the displayed QR code for the guest to scan with their smartphone, or provide them with the generated QR link directly.
+7.  **Review Logs:** The `activity_logs.txt` file will be updated with a record of the QR code generation event, including the timestamp, URL, bed number, and guest name.
 
-## HTML Template
 
-The personalized guest check-in page is generated using a fixed HTML template embedded as a large multi-line string within the `generate_html` function in the Python script. This template contains placeholders (`{}`) that are dynamically filled with the specific guest's information.
-
-To modify the design or content of the guest page, you must directly **edit the large multi-line string inside the `generate_html` function** in the `app.py` file. Be aware that this template includes a significant amount of inline CSS and JavaScript, likely from a web design tool, and requires careful editing to avoid breaking the page layout or functionality.
-
-## File Structure Expectation (Based on Linux Paths in Code)
-
-The script expects data and will create output files in specific locations. **Ensure these directories exist and are writable before running the script.**
-
-/home/ubuntu/qrCode/v2/data/cleaned_guest_list.csv
-/home/ubuntu/qrCode/data/doorCodes.csv
-/home/ubuntu/qrCode/v2/data/qrCode.png
-/home/ubuntu/qrCode/v2/data/checkin_details.html
-/home/ubuntu/qrCode/v2/data/activity_logs.txt
-/home/ubuntu/qrCode/v2/webpages/ # Temporary directory where HTML is saved before local copy
-/var/www/html/ # Standard local web server root - HTML is copied here by shutil.copy
-[SFTP Target Directory on Remote Server] # Directory on the remote server where HTML is uploaded via SFTP
-
-## Customization
-
-*   **Guest Data & Door Codes:** Regularly update the CSV files (`cleaned_guest_list.csv` and `doorCodes.csv`).
-*   **HTML Template:** Modify the embedded HTML string in the `generate_html` function (see **HTML Template** section above).
-*   **Balance Threshold:** Change the numeric value in the balance check condition (`if html_info[5] > 1:`).
-*   **Authentication:** Update the username/password in `demo.launch()`.
-*   **QR Code URL:** Modify the domain or path in `qr.add_data()`.
-*   **File Paths & Credentials:** Adjust file paths and SFTP details in the script as needed for your deployment.
 
 ## Licensing
 
