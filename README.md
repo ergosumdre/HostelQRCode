@@ -2,7 +2,8 @@
 
 This Python script provides a simple web interface (using Gradio) to automate the guest check-in information process from Mews. It reads guest data and room access codes from CSV files, generates a personalized HTML page with essential check-in details for a specific guest, uploads this page to a web server, and generates a QR code linking directly to that guest's unique page.
 
-![Customer Facing]([URL_or_Path_to_Image](https://dredyson.com/wp-content/uploads/2025/05/Screenshot-2025-05-08-at-2.17.36%E2%80%AFPM.png))
+![Customer Facing Application](https://dredyson.com/wp-content/uploads/2025/05/Screenshot-2025-05-08-at-2.17.36%E2%80%AFPM.png)
+
 
 ## Features
 
